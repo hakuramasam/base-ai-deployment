@@ -80,10 +80,11 @@ const DeployModal = ({ open, onOpenChange }: DeployModalProps) => {
       }) || [];
 
       const hash = await walletClient.deployContract({
-        abi: selected.abi,
+        abi: selected.abi as any,
         bytecode: selected.bytecode,
         args: constructorArgs,
         account: address,
+        chain: walletClient.chain,
       });
 
       setTxHash(hash);
