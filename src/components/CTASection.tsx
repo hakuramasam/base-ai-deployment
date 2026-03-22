@@ -22,10 +22,7 @@ const CTASection = () => {
               Launch your autonomous AI agent on Base Network today. 
               Full-stack infrastructure, zero configuration.
             </p>
-            <Button size="lg" className="font-display text-sm tracking-wider bg-primary hover:bg-primary/90 text-primary-foreground px-10 py-6 glow-box">
-              <Rocket className="w-4 h-4 mr-2" />
-              Deploy Now
-            </Button>
+            <WalletButton variant="cta" />
           </div>
         </motion.div>
       </div>

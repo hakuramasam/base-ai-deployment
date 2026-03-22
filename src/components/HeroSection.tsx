@@ -54,10 +54,7 @@ const HeroSection = () => {
           transition={{ duration: 0.8, delay: 0.45 }}
           className="flex flex-col sm:flex-row items-center justify-center gap-4"
         >
-          <Button size="lg" className="font-display text-sm tracking-wider bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-6 glow-box">
-            <Zap className="w-4 h-4 mr-2" />
-            Launch Agent
-          </Button>
+          <WalletButton variant="hero" />
           <Button size="lg" variant="outline" className="font-display text-sm tracking-wider border-border hover:bg-secondary text-foreground px-8 py-6">
             Read Docs
             <ArrowRight className="w-4 h-4 ml-2" />
