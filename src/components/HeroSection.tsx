@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
-import { Bot, Zap, ArrowRight } from "lucide-react";
+import { Bot, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import WalletButton from "@/components/WalletButton";
 
 const HeroSection = () => {
   return (
