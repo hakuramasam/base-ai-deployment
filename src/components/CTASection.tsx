@@ -1,6 +1,5 @@
 import { motion } from "framer-motion";
-import { Rocket } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import WalletButton from "@/components/WalletButton";
 
 const CTASection = () => {
   return (
