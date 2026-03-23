@@ -1,13 +1,14 @@
 import { useAccount } from "wagmi";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { ArrowLeft, ExternalLink, Copy, CheckCircle2, Boxes, CreditCard, Store, Wallet } from "lucide-react";
+import { ArrowLeft, ExternalLink, Copy, CheckCircle2, Boxes, CreditCard, Store, Wallet, Terminal } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { getContractsByDeployer } from "@/lib/deployedContracts";
+import { getContractsByDeployer, type DeployedContract } from "@/lib/deployedContracts";
 import { useState, useMemo } from "react";
 import WalletButton from "@/components/WalletButton";
+import ContractInteractModal from "@/components/ContractInteractModal";
 
 const categoryIcons: Record<string, React.ReactNode> = {
   Infrastructure: <Boxes className="w-4 h-4" />,
@@ -19,6 +20,7 @@ const Dashboard = () => {
   const { address, isConnected } = useAccount();
   const navigate = useNavigate();
   const [copiedAddress, setCopiedAddress] = useState<string | null>(null);
+  const [interactContract, setInteractContract] = useState<DeployedContract | null>(null);
 
   const contracts = useMemo(
     () => (address ? getContractsByDeployer(address) : []),
@@ -167,15 +169,25 @@ const Dashboard = () => {
                           {new Date(contract.deployedAt).toLocaleDateString()}
                         </TableCell>
                         <TableCell className="text-right">
-                          <a
-                            href={`https://basescan.org/address/${contract.address}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-primary transition-colors"
-                          >
-                            <ExternalLink className="w-3 h-3" />
-                            <span className="hidden sm:inline">BaseScan</span>
-                          </a>
+                          <div className="flex items-center justify-end gap-2">
+                            <Button
+                              size="sm"
+                              variant="ghost"
+                              onClick={() => setInteractContract(contract)}
+                              className="h-7 px-2 text-xs font-display tracking-wider text-primary hover:text-primary hover:bg-primary/10"
+                            >
+                              <Terminal className="w-3 h-3 mr-1" />
+                              Interact
+                            </Button>
+                            <a
+                              href={`https://basescan.org/address/${contract.address}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-primary transition-colors"
+                            >
+                              <ExternalLink className="w-3 h-3" />
+                            </a>
+                          </div>
                         </TableCell>
                       </TableRow>
                     ))}
@@ -186,6 +198,13 @@ const Dashboard = () => {
           </Card>
         </motion.div>
       </div>
+      {interactContract && (
+        <ContractInteractModal
+          open={!!interactContract}
+          onOpenChange={(o) => !o && setInteractContract(null)}
+          contract={interactContract}
+        />
+      )}
     </div>
   );
 };
