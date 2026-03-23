@@ -60,6 +60,17 @@ const HeroSection = () => {
           className="flex flex-col sm:flex-row items-center justify-center gap-4"
         >
           <WalletButton variant="hero" />
+          {isConnected && (
+            <Button
+              size="lg"
+              variant="outline"
+              onClick={() => navigate("/dashboard")}
+              className="font-display text-sm tracking-wider border-border hover:bg-secondary text-foreground px-8 py-6"
+            >
+              <LayoutDashboard className="w-4 h-4 mr-2" />
+              Dashboard
+            </Button>
+          )}
           <Button size="lg" variant="outline" className="font-display text-sm tracking-wider border-border hover:bg-secondary text-foreground px-8 py-6">
             Read Docs
             <ArrowRight className="w-4 h-4 ml-2" />

@@ -93,6 +93,15 @@ const DeployModal = ({ open, onOpenChange }: DeployModalProps) => {
 
       if (receipt.contractAddress) {
         setContractAddress(receipt.contractAddress);
+        saveDeployedContract({
+          name: selected.name,
+          category: selected.category,
+          address: receipt.contractAddress,
+          txHash: hash,
+          deployedAt: new Date().toISOString(),
+          chainId: walletClient.chain?.id ?? 8453,
+          deployer: address,
+        });
       }
       setStatus("success");
     } catch (err: any) {
