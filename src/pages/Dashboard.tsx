@@ -1,13 +1,14 @@
 import { useAccount } from "wagmi";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { ArrowLeft, ExternalLink, Copy, CheckCircle2, Boxes, CreditCard, Store, Wallet } from "lucide-react";
+import { ArrowLeft, ExternalLink, Copy, CheckCircle2, Boxes, CreditCard, Store, Wallet, Terminal } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { getContractsByDeployer } from "@/lib/deployedContracts";
+import { getContractsByDeployer, type DeployedContract } from "@/lib/deployedContracts";
 import { useState, useMemo } from "react";
 import WalletButton from "@/components/WalletButton";
+import ContractInteractModal from "@/components/ContractInteractModal";
 
 const categoryIcons: Record<string, React.ReactNode> = {
   Infrastructure: <Boxes className="w-4 h-4" />,
