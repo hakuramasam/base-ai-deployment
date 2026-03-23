@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAccount, usePublicClient, useWalletClient } from "wagmi";
-import { encodeFunctionData } from "viem";
+import { saveDeployedContract } from "@/lib/deployedContracts";
 import {
   Dialog,
   DialogContent,
