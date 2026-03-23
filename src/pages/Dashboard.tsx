@@ -169,15 +169,25 @@ const Dashboard = () => {
                           {new Date(contract.deployedAt).toLocaleDateString()}
                         </TableCell>
                         <TableCell className="text-right">
-                          <a
-                            href={`https://basescan.org/address/${contract.address}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-primary transition-colors"
-                          >
-                            <ExternalLink className="w-3 h-3" />
-                            <span className="hidden sm:inline">BaseScan</span>
-                          </a>
+                          <div className="flex items-center justify-end gap-2">
+                            <Button
+                              size="sm"
+                              variant="ghost"
+                              onClick={() => setInteractContract(contract)}
+                              className="h-7 px-2 text-xs font-display tracking-wider text-primary hover:text-primary hover:bg-primary/10"
+                            >
+                              <Terminal className="w-3 h-3 mr-1" />
+                              Interact
+                            </Button>
+                            <a
+                              href={`https://basescan.org/address/${contract.address}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-primary transition-colors"
+                            >
+                              <ExternalLink className="w-3 h-3" />
+                            </a>
+                          </div>
                         </TableCell>
                       </TableRow>
                     ))}
