@@ -114,7 +114,7 @@ const ContractInteractModal = ({
           abi,
           functionName: selectedFn.name,
           args: fnArgs.length > 0 ? fnArgs : undefined,
-        });
+        } as any);
 
         setResult(formatResult(data));
         setStatus("success");
