@@ -1,6 +1,8 @@
 import { motion } from "framer-motion";
-import { Bot, ArrowRight } from "lucide-react";
+import { Bot, ArrowRight, LayoutDashboard } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useNavigate } from "react-router-dom";
+import { useAccount } from "wagmi";
 import WalletButton from "@/components/WalletButton";
 
 const HeroSection = () => {
