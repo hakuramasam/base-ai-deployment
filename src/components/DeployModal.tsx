@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAccount, usePublicClient, useWalletClient } from "wagmi";
-import { encodeFunctionData } from "viem";
+import { saveDeployedContract } from "@/lib/deployedContracts";
 import {
   Dialog,
   DialogContent,
@@ -93,6 +93,15 @@ const DeployModal = ({ open, onOpenChange }: DeployModalProps) => {
 
       if (receipt.contractAddress) {
         setContractAddress(receipt.contractAddress);
+        saveDeployedContract({
+          name: selected.name,
+          category: selected.category,
+          address: receipt.contractAddress,
+          txHash: hash,
+          deployedAt: new Date().toISOString(),
+          chainId: walletClient.chain?.id ?? 8453,
+          deployer: address,
+        });
       }
       setStatus("success");
     } catch (err: any) {
