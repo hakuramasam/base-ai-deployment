@@ -198,6 +198,13 @@ const Dashboard = () => {
           </Card>
         </motion.div>
       </div>
+      {interactContract && (
+        <ContractInteractModal
+          open={!!interactContract}
+          onOpenChange={(o) => !o && setInteractContract(null)}
+          contract={interactContract}
+        />
+      )}
     </div>
   );
 };
