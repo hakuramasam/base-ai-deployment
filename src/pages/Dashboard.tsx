@@ -20,6 +20,7 @@ const Dashboard = () => {
   const { address, isConnected } = useAccount();
   const navigate = useNavigate();
   const [copiedAddress, setCopiedAddress] = useState<string | null>(null);
+  const [interactContract, setInteractContract] = useState<DeployedContract | null>(null);
 
   const contracts = useMemo(
     () => (address ? getContractsByDeployer(address) : []),
