@@ -6,6 +6,9 @@ import { useAccount } from "wagmi";
 import WalletButton from "@/components/WalletButton";
 
 const HeroSection = () => {
+  const navigate = useNavigate();
+  const { isConnected } = useAccount();
+
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
       {/* Grid background */}
