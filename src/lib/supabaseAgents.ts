@@ -21,6 +21,7 @@ export interface AgentMessage {
   message_type: string;
   content: string;
   status: string;
+  metadata: Record<string, unknown>;
   created_at: string;
 }
 
