@@ -86,7 +86,7 @@ export const fetchMessages = async (agentId: string): Promise<AgentMessage[]> =>
 export const sendMessage = async (msg: Omit<AgentMessage, "id" | "created_at" | "status">) => {
   const { data, error } = await supabase
     .from("agent_messages")
-    .insert(msg)
+    .insert([msg as any])
     .select()
     .single();
   if (error) throw error;
