@@ -68,10 +68,21 @@ const Dashboard = () => {
               <ArrowLeft className="w-5 h-5" />
             </Button>
             <h1 className="font-display text-lg tracking-wider text-foreground">
-              Deployed Contracts
+              KAI Dashboard
             </h1>
           </div>
           <WalletButton variant="hero" />
+        </div>
+        <div className="container mx-auto px-6 pb-3 flex gap-2 overflow-x-auto">
+          <Button variant="ghost" size="sm" className="font-display text-xs tracking-wider" onClick={() => navigate("/marketplace")}>
+            <Bot className="w-4 h-4 mr-1.5" />Marketplace
+          </Button>
+          <Button variant="ghost" size="sm" className="font-display text-xs tracking-wider" onClick={() => navigate("/a2a")}>
+            <MessageSquare className="w-4 h-4 mr-1.5" />A2A Comms
+          </Button>
+          <Button variant="ghost" size="sm" className="font-display text-xs tracking-wider" onClick={() => navigate("/payments")}>
+            <TrendingUp className="w-4 h-4 mr-1.5" />x402 Payments
+          </Button>
         </div>
       </header>
 
