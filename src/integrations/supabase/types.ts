@@ -14,7 +14,206 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      agent_messages: {
+        Row: {
+          content: string
+          created_at: string
+          from_agent_id: string
+          id: string
+          message_type: string
+          metadata: Json | null
+          status: string
+          to_agent_id: string
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          from_agent_id: string
+          id?: string
+          message_type?: string
+          metadata?: Json | null
+          status?: string
+          to_agent_id: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          from_agent_id?: string
+          id?: string
+          message_type?: string
+          metadata?: Json | null
+          status?: string
+          to_agent_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "agent_messages_from_agent_id_fkey"
+            columns: ["from_agent_id"]
+            isOneToOne: false
+            referencedRelation: "agents"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "agent_messages_to_agent_id_fkey"
+            columns: ["to_agent_id"]
+            isOneToOne: false
+            referencedRelation: "agents"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      agents: {
+        Row: {
+          agent_type: string
+          chain_id: number
+          created_at: string
+          description: string | null
+          id: string
+          is_active: boolean
+          metadata: Json | null
+          name: string
+          price_per_call: number | null
+          skills: string[] | null
+          updated_at: string
+          wallet_address: string
+        }
+        Insert: {
+          agent_type?: string
+          chain_id?: number
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_active?: boolean
+          metadata?: Json | null
+          name: string
+          price_per_call?: number | null
+          skills?: string[] | null
+          updated_at?: string
+          wallet_address: string
+        }
+        Update: {
+          agent_type?: string
+          chain_id?: number
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_active?: boolean
+          metadata?: Json | null
+          name?: string
+          price_per_call?: number | null
+          skills?: string[] | null
+          updated_at?: string
+          wallet_address?: string
+        }
+        Relationships: []
+      }
+      payment_transactions: {
+        Row: {
+          amount: number
+          chain_id: number
+          created_at: string
+          from_address: string
+          id: string
+          payment_type: string
+          status: string
+          task_delegation_id: string | null
+          to_address: string
+          token_address: string | null
+          tx_hash: string | null
+        }
+        Insert: {
+          amount: number
+          chain_id?: number
+          created_at?: string
+          from_address: string
+          id?: string
+          payment_type?: string
+          status?: string
+          task_delegation_id?: string | null
+          to_address: string
+          token_address?: string | null
+          tx_hash?: string | null
+        }
+        Update: {
+          amount?: number
+          chain_id?: number
+          created_at?: string
+          from_address?: string
+          id?: string
+          payment_type?: string
+          status?: string
+          task_delegation_id?: string | null
+          to_address?: string
+          token_address?: string | null
+          tx_hash?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "payment_transactions_task_delegation_id_fkey"
+            columns: ["task_delegation_id"]
+            isOneToOne: false
+            referencedRelation: "task_delegations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      task_delegations: {
+        Row: {
+          chain_id: number
+          completed_at: string | null
+          created_at: string
+          executor_agent_id: string | null
+          id: string
+          payment_amount: number | null
+          payment_tx_hash: string | null
+          requester_agent_id: string
+          result: string | null
+          status: string
+          task_description: string
+        }
+        Insert: {
+          chain_id?: number
+          completed_at?: string | null
+          created_at?: string
+          executor_agent_id?: string | null
+          id?: string
+          payment_amount?: number | null
+          payment_tx_hash?: string | null
+          requester_agent_id: string
+          result?: string | null
+          status?: string
+          task_description: string
+        }
+        Update: {
+          chain_id?: number
+          completed_at?: string | null
+          created_at?: string
+          executor_agent_id?: string | null
+          id?: string
+          payment_amount?: number | null
+          payment_tx_hash?: string | null
+          requester_agent_id?: string
+          result?: string | null
+          status?: string
+          task_description?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "task_delegations_executor_agent_id_fkey"
+            columns: ["executor_agent_id"]
+            isOneToOne: false
+            referencedRelation: "agents"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "task_delegations_requester_agent_id_fkey"
+            columns: ["requester_agent_id"]
+            isOneToOne: false
+            referencedRelation: "agents"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
