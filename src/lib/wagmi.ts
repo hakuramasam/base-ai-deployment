@@ -1,9 +1,11 @@
 import { getDefaultConfig } from '@rainbow-me/rainbowkit';
-import { base } from 'wagmi/chains';
+import { base, bsc } from 'wagmi/chains';
+
+export const supportedChains = [base, bsc] as const;
 
 export const config = getDefaultConfig({
-  appName: 'Autonomous AI Agent Platform',
+  appName: 'KAI Agent Platform',
   projectId: 'ai-agent-platform',
-  chains: [base],
+  chains: supportedChains,
   ssr: false,
 });
