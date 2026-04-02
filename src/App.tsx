@@ -8,6 +8,9 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { config } from "@/lib/wagmi";
 import Index from "./pages/Index.tsx";
 import Dashboard from "./pages/Dashboard.tsx";
+import AgentMarketplace from "./pages/AgentMarketplace.tsx";
+import A2ACommunication from "./pages/A2ACommunication.tsx";
+import Payments from "./pages/Payments.tsx";
 import NotFound from "./pages/NotFound.tsx";
 import "@rainbow-me/rainbowkit/styles.css";
 
@@ -24,6 +27,9 @@ const App = () => (
             <Routes>
               <Route path="/" element={<Index />} />
               <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/marketplace" element={<AgentMarketplace />} />
+              <Route path="/a2a" element={<A2ACommunication />} />
+              <Route path="/payments" element={<Payments />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </BrowserRouter>
