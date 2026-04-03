@@ -1,4 +1,5 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
+import { useRealtimeSubscription } from "@/hooks/useRealtimeSubscription";
 import { useAccount } from "wagmi";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { motion } from "framer-motion";
@@ -43,6 +44,13 @@ const A2ACommunication = () => {
       .catch(console.error)
       .finally(() => setLoading(false));
   }, []);
+
+  useRealtimeSubscription<TaskDelegation>({
+    table: "task_delegations",
+    onInsert: useCallback((t: TaskDelegation) => setTasks(prev => [t, ...prev]), []),
+    onUpdate: useCallback((t: TaskDelegation) => setTasks(prev => prev.map(x => x.id === t.id ? t : x)), []),
+    enabled: isConnected,
+  });
 
   const myAgents = agents.filter(a => a.wallet_address.toLowerCase() === address?.toLowerCase());
   const myAgentIds = new Set(myAgents.map(a => a.id));

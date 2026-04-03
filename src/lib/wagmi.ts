@@ -5,7 +5,7 @@ export const supportedChains = [base, bsc] as const;
 
 export const config = getDefaultConfig({
   appName: 'KAI Agent Platform',
-  projectId: 'ai-agent-platform',
+  projectId: '701902d4a59820e8d163a82ce3510e4c',
   chains: supportedChains,
   ssr: false,
 });
