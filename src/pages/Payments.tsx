@@ -18,6 +18,13 @@ const Payments = () => {
   const [payments, setPayments] = useState<PaymentTransaction[]>([]);
   const [loading, setLoading] = useState(true);
 
+  useRealtimeSubscription<PaymentTransaction>({
+    table: "payment_transactions",
+    onInsert: useCallback((p: PaymentTransaction) => setPayments(prev => [p, ...prev]), []),
+    onUpdate: useCallback((p: PaymentTransaction) => setPayments(prev => prev.map(x => x.id === p.id ? p : x)), []),
+    enabled: isConnected,
+  });
+
   useEffect(() => {
     fetchPayments(address).then(setPayments).catch(console.error).finally(() => setLoading(false));
   }, [address]);

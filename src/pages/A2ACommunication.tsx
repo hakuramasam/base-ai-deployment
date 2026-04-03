@@ -45,6 +45,13 @@ const A2ACommunication = () => {
       .finally(() => setLoading(false));
   }, []);
 
+  useRealtimeSubscription<TaskDelegation>({
+    table: "task_delegations",
+    onInsert: useCallback((t: TaskDelegation) => setTasks(prev => [t, ...prev]), []),
+    onUpdate: useCallback((t: TaskDelegation) => setTasks(prev => prev.map(x => x.id === t.id ? t : x)), []),
+    enabled: isConnected,
+  });
+
   const myAgents = agents.filter(a => a.wallet_address.toLowerCase() === address?.toLowerCase());
   const myAgentIds = new Set(myAgents.map(a => a.id));
   const relevantTasks = tasks.filter(t => myAgentIds.has(t.requester_agent_id) || (t.executor_agent_id && myAgentIds.has(t.executor_agent_id)));
