@@ -9,6 +9,7 @@ import { getContractsByDeployer, type DeployedContract } from "@/lib/deployedCon
 import { useState, useMemo } from "react";
 import WalletButton from "@/components/WalletButton";
 import ContractInteractModal from "@/components/ContractInteractModal";
+import AgentBrainChat from "@/components/AgentBrainChat";
 
 const categoryIcons: Record<string, React.ReactNode> = {
   Infrastructure: <Boxes className="w-4 h-4" />,
