@@ -220,6 +220,7 @@ const Dashboard = () => {
           contract={interactContract}
         />
       )}
+      <AgentBrainChat />
     </div>
   );
 };
