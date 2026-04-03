@@ -11,7 +11,7 @@ interface UseRealtimeOptions<T> {
   enabled?: boolean;
 }
 
-export function useRealtimeSubscription<T extends Record<string, unknown>>({
+export function useRealtimeSubscription<T>({
   table,
   onInsert,
   onUpdate,
