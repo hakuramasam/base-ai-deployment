@@ -14,6 +14,118 @@ export type Database = {
   }
   public: {
     Tables: {
+      a2a_messages: {
+        Row: {
+          created_at: string | null
+          direction: string
+          id: string
+          message_type: string
+          payload: Json
+          recipient: string
+          sender: string
+        }
+        Insert: {
+          created_at?: string | null
+          direction: string
+          id: string
+          message_type: string
+          payload: Json
+          recipient: string
+          sender: string
+        }
+        Update: {
+          created_at?: string | null
+          direction?: string
+          id?: string
+          message_type?: string
+          payload?: Json
+          recipient?: string
+          sender?: string
+        }
+        Relationships: []
+      }
+      agent_api_keys: {
+        Row: {
+          agent_id: string | null
+          created_at: string | null
+          id: string
+          key_ciphertext: string
+          key_kms_ref: string | null
+          provider: string
+          revoked_at: string | null
+          scopes: string[] | null
+        }
+        Insert: {
+          agent_id?: string | null
+          created_at?: string | null
+          id: string
+          key_ciphertext: string
+          key_kms_ref?: string | null
+          provider: string
+          revoked_at?: string | null
+          scopes?: string[] | null
+        }
+        Update: {
+          agent_id?: string | null
+          created_at?: string | null
+          id?: string
+          key_ciphertext?: string
+          key_kms_ref?: string | null
+          provider?: string
+          revoked_at?: string | null
+          scopes?: string[] | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "agent_api_keys_agent_id_fkey"
+            columns: ["agent_id"]
+            isOneToOne: false
+            referencedRelation: "agents"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      agent_mcp_connections: {
+        Row: {
+          agent_id: string | null
+          auth_ref: string | null
+          auth_type: string | null
+          base_url: string | null
+          id: string
+          last_seen: string | null
+          server_name: string | null
+          status: string | null
+        }
+        Insert: {
+          agent_id?: string | null
+          auth_ref?: string | null
+          auth_type?: string | null
+          base_url?: string | null
+          id: string
+          last_seen?: string | null
+          server_name?: string | null
+          status?: string | null
+        }
+        Update: {
+          agent_id?: string | null
+          auth_ref?: string | null
+          auth_type?: string | null
+          base_url?: string | null
+          id?: string
+          last_seen?: string | null
+          server_name?: string | null
+          status?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "agent_mcp_connections_agent_id_fkey"
+            columns: ["agent_id"]
+            isOneToOne: false
+            referencedRelation: "agents"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       agent_messages: {
         Row: {
           content: string
@@ -62,18 +174,141 @@ export type Database = {
           },
         ]
       }
+      agent_services: {
+        Row: {
+          active: boolean | null
+          agent_id: string | null
+          capabilities: Json | null
+          created_at: string | null
+          id: string
+          price_usdc: number | null
+          service_name: string
+          sla_json: Json | null
+        }
+        Insert: {
+          active?: boolean | null
+          agent_id?: string | null
+          capabilities?: Json | null
+          created_at?: string | null
+          id: string
+          price_usdc?: number | null
+          service_name: string
+          sla_json?: Json | null
+        }
+        Update: {
+          active?: boolean | null
+          agent_id?: string | null
+          capabilities?: Json | null
+          created_at?: string | null
+          id?: string
+          price_usdc?: number | null
+          service_name?: string
+          sla_json?: Json | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "agent_services_agent_id_fkey"
+            columns: ["agent_id"]
+            isOneToOne: false
+            referencedRelation: "agents"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      agent_tools: {
+        Row: {
+          active: boolean | null
+          agent_id: string | null
+          created_at: string | null
+          endpoint: string
+          id: string
+          price_usdc: number | null
+          schema_json: Json | null
+          tool_name: string
+        }
+        Insert: {
+          active?: boolean | null
+          agent_id?: string | null
+          created_at?: string | null
+          endpoint: string
+          id: string
+          price_usdc?: number | null
+          schema_json?: Json | null
+          tool_name: string
+        }
+        Update: {
+          active?: boolean | null
+          agent_id?: string | null
+          created_at?: string | null
+          endpoint?: string
+          id?: string
+          price_usdc?: number | null
+          schema_json?: Json | null
+          tool_name?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "agent_tools_agent_id_fkey"
+            columns: ["agent_id"]
+            isOneToOne: false
+            referencedRelation: "agents"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      agent_wallets: {
+        Row: {
+          address: string
+          agent_id: string | null
+          chain: string | null
+          created_at: string | null
+          id: string
+          status: string | null
+          type: string | null
+        }
+        Insert: {
+          address: string
+          agent_id?: string | null
+          chain?: string | null
+          created_at?: string | null
+          id: string
+          status?: string | null
+          type?: string | null
+        }
+        Update: {
+          address?: string
+          agent_id?: string | null
+          chain?: string | null
+          created_at?: string | null
+          id?: string
+          status?: string | null
+          type?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "agent_wallets_agent_id_fkey"
+            columns: ["agent_id"]
+            isOneToOne: false
+            referencedRelation: "agents"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       agents: {
         Row: {
           agent_type: string
           chain_id: number
           created_at: string
           description: string | null
+          display_name: string | null
+          fid: number | null
           id: string
           is_active: boolean
           metadata: Json | null
           name: string
           price_per_call: number | null
           skills: string[] | null
+          status: string | null
           updated_at: string
           wallet_address: string
         }
@@ -82,12 +317,15 @@ export type Database = {
           chain_id?: number
           created_at?: string
           description?: string | null
+          display_name?: string | null
+          fid?: number | null
           id?: string
           is_active?: boolean
           metadata?: Json | null
           name: string
           price_per_call?: number | null
           skills?: string[] | null
+          status?: string | null
           updated_at?: string
           wallet_address: string
         }
@@ -96,14 +334,118 @@ export type Database = {
           chain_id?: number
           created_at?: string
           description?: string | null
+          display_name?: string | null
+          fid?: number | null
           id?: string
           is_active?: boolean
           metadata?: Json | null
           name?: string
           price_per_call?: number | null
           skills?: string[] | null
+          status?: string | null
           updated_at?: string
           wallet_address?: string
+        }
+        Relationships: []
+      }
+      api_calls: {
+        Row: {
+          caller_agent_id: string | null
+          created_at: string | null
+          id: string
+          nonce: string | null
+          price_usdc: number | null
+          provider_agent_id: string | null
+          service_id: string | null
+          status: string | null
+          tool_id: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          caller_agent_id?: string | null
+          created_at?: string | null
+          id: string
+          nonce?: string | null
+          price_usdc?: number | null
+          provider_agent_id?: string | null
+          service_id?: string | null
+          status?: string | null
+          tool_id?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          caller_agent_id?: string | null
+          created_at?: string | null
+          id?: string
+          nonce?: string | null
+          price_usdc?: number | null
+          provider_agent_id?: string | null
+          service_id?: string | null
+          status?: string | null
+          tool_id?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "api_calls_caller_agent_id_fkey"
+            columns: ["caller_agent_id"]
+            isOneToOne: false
+            referencedRelation: "agents"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "api_calls_provider_agent_id_fkey"
+            columns: ["provider_agent_id"]
+            isOneToOne: false
+            referencedRelation: "agents"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "api_calls_service_id_fkey"
+            columns: ["service_id"]
+            isOneToOne: false
+            referencedRelation: "agent_services"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "api_calls_tool_id_fkey"
+            columns: ["tool_id"]
+            isOneToOne: false
+            referencedRelation: "agent_tools"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      payment_receipts: {
+        Row: {
+          amount_usdc: number | null
+          api_call_id: string | null
+          block_number: number | null
+          confirmed_at: string | null
+          id: string
+          payee_wallet: string | null
+          payer_wallet: string | null
+          tx_hash: string
+        }
+        Insert: {
+          amount_usdc?: number | null
+          api_call_id?: string | null
+          block_number?: number | null
+          confirmed_at?: string | null
+          id: string
+          payee_wallet?: string | null
+          payer_wallet?: string | null
+          tx_hash: string
+        }
+        Update: {
+          amount_usdc?: number | null
+          api_call_id?: string | null
+          block_number?: number | null
+          confirmed_at?: string | null
+          id?: string
+          payee_wallet?: string | null
+          payer_wallet?: string | null
+          tx_hash?: string
         }
         Relationships: []
       }
@@ -156,6 +498,117 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      reputation_events: {
+        Row: {
+          agent_id: string | null
+          created_at: string | null
+          delta: number | null
+          id: number
+          reason: string | null
+          source: string | null
+        }
+        Insert: {
+          agent_id?: string | null
+          created_at?: string | null
+          delta?: number | null
+          id?: number
+          reason?: string | null
+          source?: string | null
+        }
+        Update: {
+          agent_id?: string | null
+          created_at?: string | null
+          delta?: number | null
+          id?: number
+          reason?: string | null
+          source?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "reputation_events_agent_id_fkey"
+            columns: ["agent_id"]
+            isOneToOne: false
+            referencedRelation: "agents"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      service_requests: {
+        Row: {
+          api_call_id: string | null
+          caller_agent_id: string | null
+          created_at: string | null
+          id: string
+          provider_agent_id: string | null
+          service_id: string | null
+          status: string | null
+        }
+        Insert: {
+          api_call_id?: string | null
+          caller_agent_id?: string | null
+          created_at?: string | null
+          id: string
+          provider_agent_id?: string | null
+          service_id?: string | null
+          status?: string | null
+        }
+        Update: {
+          api_call_id?: string | null
+          caller_agent_id?: string | null
+          created_at?: string | null
+          id?: string
+          provider_agent_id?: string | null
+          service_id?: string | null
+          status?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "service_requests_caller_agent_id_fkey"
+            columns: ["caller_agent_id"]
+            isOneToOne: false
+            referencedRelation: "agents"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "service_requests_provider_agent_id_fkey"
+            columns: ["provider_agent_id"]
+            isOneToOne: false
+            referencedRelation: "agents"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "service_requests_service_id_fkey"
+            columns: ["service_id"]
+            isOneToOne: false
+            referencedRelation: "agent_services"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      skills: {
+        Row: {
+          id: string
+          installed_at: string | null
+          name: string
+          source: string
+          version: string | null
+        }
+        Insert: {
+          id: string
+          installed_at?: string | null
+          name: string
+          source: string
+          version?: string | null
+        }
+        Update: {
+          id?: string
+          installed_at?: string | null
+          name?: string
+          source?: string
+          version?: string | null
+        }
+        Relationships: []
       }
       task_delegations: {
         Row: {
@@ -213,6 +666,152 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      tool_runs: {
+        Row: {
+          created_at: string | null
+          id: string
+          input: Json
+          output: Json | null
+          status: string
+          tool: string
+        }
+        Insert: {
+          created_at?: string | null
+          id: string
+          input: Json
+          output?: Json | null
+          status: string
+          tool: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          input?: Json
+          output?: Json | null
+          status?: string
+          tool?: string
+        }
+        Relationships: []
+      }
+      tool_usage: {
+        Row: {
+          api_call_id: string | null
+          caller_agent_id: string | null
+          cost_usdc: number | null
+          created_at: string | null
+          id: string
+          status: string | null
+          tool_id: string | null
+        }
+        Insert: {
+          api_call_id?: string | null
+          caller_agent_id?: string | null
+          cost_usdc?: number | null
+          created_at?: string | null
+          id: string
+          status?: string | null
+          tool_id?: string | null
+        }
+        Update: {
+          api_call_id?: string | null
+          caller_agent_id?: string | null
+          cost_usdc?: number | null
+          created_at?: string | null
+          id?: string
+          status?: string | null
+          tool_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tool_usage_caller_agent_id_fkey"
+            columns: ["caller_agent_id"]
+            isOneToOne: false
+            referencedRelation: "agents"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "tool_usage_tool_id_fkey"
+            columns: ["tool_id"]
+            isOneToOne: false
+            referencedRelation: "agent_tools"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      wallet_ledger: {
+        Row: {
+          agent_id: string | null
+          amount_usdc: number
+          api_call_id: string | null
+          created_at: string | null
+          direction: string
+          id: number
+          reason: string | null
+          tx_hash: string | null
+          wallet: string
+        }
+        Insert: {
+          agent_id?: string | null
+          amount_usdc: number
+          api_call_id?: string | null
+          created_at?: string | null
+          direction: string
+          id?: number
+          reason?: string | null
+          tx_hash?: string | null
+          wallet: string
+        }
+        Update: {
+          agent_id?: string | null
+          amount_usdc?: number
+          api_call_id?: string | null
+          created_at?: string | null
+          direction?: string
+          id?: number
+          reason?: string | null
+          tx_hash?: string | null
+          wallet?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "wallet_ledger_agent_id_fkey"
+            columns: ["agent_id"]
+            isOneToOne: false
+            referencedRelation: "agents"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      x402_payments: {
+        Row: {
+          amount: string
+          chain_id: number
+          created_at: string | null
+          id: string
+          link: string
+          token_address: string
+          used_at: string | null
+        }
+        Insert: {
+          amount: string
+          chain_id: number
+          created_at?: string | null
+          id: string
+          link: string
+          token_address: string
+          used_at?: string | null
+        }
+        Update: {
+          amount?: string
+          chain_id?: number
+          created_at?: string | null
+          id?: string
+          link?: string
+          token_address?: string
+          used_at?: string | null
+        }
+        Relationships: []
       }
     }
     Views: {
