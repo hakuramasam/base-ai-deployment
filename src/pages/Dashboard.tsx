@@ -1,7 +1,7 @@
 import { useAccount } from "wagmi";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { ArrowLeft, ExternalLink, Copy, CheckCircle2, Boxes, CreditCard, Store, Wallet, Terminal, Bot, MessageSquare, TrendingUp } from "lucide-react";
+import { ArrowLeft, ExternalLink, Copy, CheckCircle2, Boxes, CreditCard, Store, Wallet, Terminal, Bot, MessageSquare, TrendingUp, Shield } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";

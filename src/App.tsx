@@ -31,6 +31,7 @@ const App = () => (
               <Route path="/marketplace" element={<AgentMarketplace />} />
               <Route path="/a2a" element={<A2ACommunication />} />
               <Route path="/payments" element={<Payments />} />
+              <Route path="/risk" element={<RiskSafety />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </BrowserRouter>
