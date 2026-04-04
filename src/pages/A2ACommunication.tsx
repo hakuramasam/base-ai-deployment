@@ -13,7 +13,7 @@ import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
 import WalletButton from "@/components/WalletButton";
-import { fetchAgents, fetchTasks, createTask, sendMessage, type Agent, type TaskDelegation } from "@/lib/supabaseAgents";
+import { fetchAgents, fetchTasks, fetchMessages, createTask, sendMessage, type Agent, type TaskDelegation, type AgentMessage } from "@/lib/supabaseAgents";
 import { toast } from "sonner";
 
 const statusColors: Record<string, string> = {
@@ -31,6 +31,7 @@ const A2ACommunication = () => {
 
   const [agents, setAgents] = useState<Agent[]>([]);
   const [tasks, setTasks] = useState<TaskDelegation[]>([]);
+  const [messages, setMessages] = useState<AgentMessage[]>([]);
   const [selectedAgent, setSelectedAgent] = useState(preselectedAgent || "");
   const [taskDesc, setTaskDesc] = useState("");
   const [paymentAmount, setPaymentAmount] = useState("0.1");
@@ -52,8 +53,22 @@ const A2ACommunication = () => {
     enabled: isConnected,
   });
 
+  useRealtimeSubscription<AgentMessage>({
+    table: "agent_messages",
+    onInsert: useCallback((m: AgentMessage) => setMessages(prev => [m, ...prev]), []),
+    onUpdate: useCallback((m: AgentMessage) => setMessages(prev => prev.map(x => x.id === m.id ? m : x)), []),
+    enabled: isConnected,
+  });
+
   const myAgents = agents.filter(a => a.wallet_address.toLowerCase() === address?.toLowerCase());
   const myAgentIds = new Set(myAgents.map(a => a.id));
+
+  // Fetch messages when myAgents are available
+  useEffect(() => {
+    if (myAgents.length > 0) {
+      fetchMessages(myAgents[0].id).then(setMessages).catch(console.error);
+    }
+  }, [agents, address]);
   const relevantTasks = tasks.filter(t => myAgentIds.has(t.requester_agent_id) || (t.executor_agent_id && myAgentIds.has(t.executor_agent_id)));
 
   const handleCreateTask = async () => {
@@ -197,6 +212,38 @@ const A2ACommunication = () => {
                 </div>
                 <div><Label>Message</Label><Textarea value={messageContent} onChange={e => setMessageContent(e.target.value)} placeholder="Request analysis of..." /></div>
                 <Button onClick={handleSendMessage} className="font-display tracking-wider"><Send className="w-4 h-4 mr-2" />Send</Button>
+              </CardContent>
+            </Card>
+
+            {/* Message History */}
+            <Card className="bg-card border-border">
+              <CardHeader><CardTitle className="font-display text-sm tracking-wider">Message History</CardTitle></CardHeader>
+              <CardContent>
+                {messages.length === 0 ? (
+                  <p className="text-sm text-muted-foreground text-center py-8">No messages yet.</p>
+                ) : (
+                  <div className="space-y-3">
+                    {messages.map(msg => {
+                      const isSent = myAgentIds.has(msg.from_agent_id);
+                      const otherAgent = agents.find(a => a.id === (isSent ? msg.to_agent_id : msg.from_agent_id));
+                      return (
+                        <div key={msg.id} className={`p-3 rounded-lg border border-border space-y-1 ${isSent ? "bg-primary/5 ml-4" : "bg-muted/50 mr-4"}`}>
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-2">
+                              <Bot className="w-3 h-3 text-muted-foreground" />
+                              <span className="text-[10px] font-display text-muted-foreground">
+                                {isSent ? `To: ${otherAgent?.name || "Unknown"}` : `From: ${otherAgent?.name || "Unknown"}`}
+                              </span>
+                            </div>
+                            <Badge variant="outline" className="text-[10px]">{msg.status}</Badge>
+                          </div>
+                          <p className="text-xs text-foreground">{msg.content}</p>
+                          <p className="text-[10px] text-muted-foreground">{new Date(msg.created_at).toLocaleString()}</p>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
               </CardContent>
             </Card>
           </TabsContent>

@@ -534,6 +534,95 @@ export type Database = {
           },
         ]
       }
+      risk_events: {
+        Row: {
+          chain: string
+          created_at: string
+          details: string | null
+          event_type: string
+          id: string
+          rule_id: string | null
+          score: number
+          status: string
+          wallet: string
+        }
+        Insert: {
+          chain?: string
+          created_at?: string
+          details?: string | null
+          event_type: string
+          id?: string
+          rule_id?: string | null
+          score?: number
+          status?: string
+          wallet: string
+        }
+        Update: {
+          chain?: string
+          created_at?: string
+          details?: string | null
+          event_type?: string
+          id?: string
+          rule_id?: string | null
+          score?: number
+          status?: string
+          wallet?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "risk_events_rule_id_fkey"
+            columns: ["rule_id"]
+            isOneToOne: false
+            referencedRelation: "risk_rules"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      risk_rules: {
+        Row: {
+          created_at: string
+          description: string | null
+          enabled: boolean
+          id: string
+          name: string
+          param_label: string | null
+          param_range_max: number | null
+          param_range_min: number | null
+          param_unit: string | null
+          parameter: number | null
+          severity: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          enabled?: boolean
+          id: string
+          name: string
+          param_label?: string | null
+          param_range_max?: number | null
+          param_range_min?: number | null
+          param_unit?: string | null
+          parameter?: number | null
+          severity?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          enabled?: boolean
+          id?: string
+          name?: string
+          param_label?: string | null
+          param_range_max?: number | null
+          param_range_min?: number | null
+          param_unit?: string | null
+          parameter?: number | null
+          severity?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       service_requests: {
         Row: {
           api_call_id: string | null
