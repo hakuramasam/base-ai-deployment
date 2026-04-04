@@ -31,6 +31,7 @@ const A2ACommunication = () => {
 
   const [agents, setAgents] = useState<Agent[]>([]);
   const [tasks, setTasks] = useState<TaskDelegation[]>([]);
+  const [messages, setMessages] = useState<AgentMessage[]>([]);
   const [selectedAgent, setSelectedAgent] = useState(preselectedAgent || "");
   const [taskDesc, setTaskDesc] = useState("");
   const [paymentAmount, setPaymentAmount] = useState("0.1");
