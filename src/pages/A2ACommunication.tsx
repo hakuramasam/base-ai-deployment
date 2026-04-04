@@ -53,8 +53,22 @@ const A2ACommunication = () => {
     enabled: isConnected,
   });
 
+  useRealtimeSubscription<AgentMessage>({
+    table: "agent_messages",
+    onInsert: useCallback((m: AgentMessage) => setMessages(prev => [m, ...prev]), []),
+    onUpdate: useCallback((m: AgentMessage) => setMessages(prev => prev.map(x => x.id === m.id ? m : x)), []),
+    enabled: isConnected,
+  });
+
   const myAgents = agents.filter(a => a.wallet_address.toLowerCase() === address?.toLowerCase());
   const myAgentIds = new Set(myAgents.map(a => a.id));
+
+  // Fetch messages when myAgents are available
+  useEffect(() => {
+    if (myAgents.length > 0) {
+      fetchMessages(myAgents[0].id).then(setMessages).catch(console.error);
+    }
+  }, [agents, address]);
   const relevantTasks = tasks.filter(t => myAgentIds.has(t.requester_agent_id) || (t.executor_agent_id && myAgentIds.has(t.executor_agent_id)));
 
   const handleCreateTask = async () => {
