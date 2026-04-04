@@ -214,6 +214,38 @@ const A2ACommunication = () => {
                 <Button onClick={handleSendMessage} className="font-display tracking-wider"><Send className="w-4 h-4 mr-2" />Send</Button>
               </CardContent>
             </Card>
+
+            {/* Message History */}
+            <Card className="bg-card border-border">
+              <CardHeader><CardTitle className="font-display text-sm tracking-wider">Message History</CardTitle></CardHeader>
+              <CardContent>
+                {messages.length === 0 ? (
+                  <p className="text-sm text-muted-foreground text-center py-8">No messages yet.</p>
+                ) : (
+                  <div className="space-y-3">
+                    {messages.map(msg => {
+                      const isSent = myAgentIds.has(msg.from_agent_id);
+                      const otherAgent = agents.find(a => a.id === (isSent ? msg.to_agent_id : msg.from_agent_id));
+                      return (
+                        <div key={msg.id} className={`p-3 rounded-lg border border-border space-y-1 ${isSent ? "bg-primary/5 ml-4" : "bg-muted/50 mr-4"}`}>
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-2">
+                              <Bot className="w-3 h-3 text-muted-foreground" />
+                              <span className="text-[10px] font-display text-muted-foreground">
+                                {isSent ? `To: ${otherAgent?.name || "Unknown"}` : `From: ${otherAgent?.name || "Unknown"}`}
+                              </span>
+                            </div>
+                            <Badge variant="outline" className="text-[10px]">{msg.status}</Badge>
+                          </div>
+                          <p className="text-xs text-foreground">{msg.content}</p>
+                          <p className="text-[10px] text-muted-foreground">{new Date(msg.created_at).toLocaleString()}</p>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
           </TabsContent>
         </Tabs>
       </div>
