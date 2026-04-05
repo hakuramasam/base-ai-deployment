@@ -13,7 +13,7 @@ import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
 import WalletButton from "@/components/WalletButton";
-import { fetchAgents, fetchTasks, fetchMessages, createTask, sendMessage, type Agent, type TaskDelegation, type AgentMessage } from "@/lib/supabaseAgents";
+import { fetchAgents, fetchTasks, fetchMessages, createTask, sendMessage, completeTask, type Agent, type TaskDelegation, type AgentMessage } from "@/lib/supabaseAgents";
 import { toast } from "sonner";
 
 const statusColors: Record<string, string> = {
