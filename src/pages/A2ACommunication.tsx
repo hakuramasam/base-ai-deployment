@@ -173,18 +173,45 @@ const A2ACommunication = () => {
                     <p className="text-sm text-muted-foreground text-center py-8">No tasks yet.</p>
                   ) : (
                     <div className="space-y-3">
-                      {relevantTasks.map(task => (
+                      {relevantTasks.map(task => {
+                        const canComplete = task.status === "open" || task.status === "assigned";
+                        const isRequester = myAgentIds.has(task.requester_agent_id);
+                        return (
                         <div key={task.id} className="p-3 rounded-lg bg-muted/50 border border-border space-y-2">
                           <div className="flex items-center justify-between">
                             <p className="text-xs text-foreground font-medium line-clamp-1">{task.task_description}</p>
                             <Badge className={`text-[10px] ${statusColors[task.status] || ""}`}>{task.status}</Badge>
                           </div>
-                          <div className="flex items-center gap-3 text-[10px] text-muted-foreground">
-                            <span>{task.payment_amount} USDC</span>
-                            <span>{new Date(task.created_at).toLocaleDateString()}</span>
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-3 text-[10px] text-muted-foreground">
+                              <span>{task.payment_amount} USDC</span>
+                              <span>{new Date(task.created_at).toLocaleDateString()}</span>
+                              {task.payment_tx_hash && (
+                                <a href={`https://basescan.org/tx/${task.payment_tx_hash}`} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">Paid ✓</a>
+                              )}
+                            </div>
+                            {canComplete && !isRequester && myAgents.length > 0 && (
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                className="text-[10px] h-6 px-2 border-accent/30 text-accent hover:bg-accent/10"
+                                onClick={async () => {
+                                  try {
+                                    const { task: updated, payment } = await completeTask(task.id, "Task completed successfully", myAgents[0].id);
+                                    setTasks(prev => prev.map(t => t.id === updated.id ? { ...updated, payment_tx_hash: payment.tx_hash } : t));
+                                    toast.success(`Task completed! Payment of ${task.payment_amount} USDC sent.`);
+                                  } catch (e: any) {
+                                    toast.error(e.message);
+                                  }
+                                }}
+                              >
+                                Complete & Pay
+                              </Button>
+                            )}
                           </div>
                         </div>
-                      ))}
+                        );
+                      })}
                     </div>
                   )}
                 </CardContent>
