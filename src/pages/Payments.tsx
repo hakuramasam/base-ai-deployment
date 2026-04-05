@@ -3,12 +3,15 @@ import { useRealtimeSubscription } from "@/hooks/useRealtimeSubscription";
 import { useAccount } from "wagmi";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { ArrowLeft, CreditCard, TrendingUp, ArrowUpRight, ArrowDownLeft } from "lucide-react";
+import { ArrowLeft, CreditCard, TrendingUp, ArrowUpRight, ArrowDownLeft, Send, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
 import WalletButton from "@/components/WalletButton";
 import { fetchPayments, type PaymentTransaction } from "@/lib/supabaseAgents";
+import { sendX402Payment } from "@/lib/edgeFunctions";
+import { toast } from "sonner";
 
 const chainNames: Record<number, string> = { 8453: "Base", 56: "BNB Chain" };
 
@@ -17,6 +20,9 @@ const Payments = () => {
   const navigate = useNavigate();
   const [payments, setPayments] = useState<PaymentTransaction[]>([]);
   const [loading, setLoading] = useState(true);
+  const [payTo, setPayTo] = useState("");
+  const [payAmount, setPayAmount] = useState("");
+  const [sending, setSending] = useState(false);
 
   useRealtimeSubscription<PaymentTransaction>({
     table: "payment_transactions",
@@ -76,6 +82,53 @@ const Payments = () => {
             <CardContent className="p-5">
               <p className="text-xs font-display tracking-widest uppercase text-muted-foreground mb-1">Transactions</p>
               <p className="text-3xl font-display font-bold text-foreground">{payments.length}</p>
+            </CardContent>
+          </Card>
+        </motion.div>
+
+        {/* Send Payment Card */}
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }}>
+          <Card className="bg-card border-border">
+            <CardHeader><CardTitle className="font-display text-sm tracking-wider">Send x402 Payment</CardTitle></CardHeader>
+            <CardContent>
+              <div className="flex flex-col sm:flex-row gap-3">
+                <Input
+                  placeholder="Recipient address (0x...)"
+                  value={payTo}
+                  onChange={(e) => setPayTo(e.target.value)}
+                  className="flex-1 bg-muted border-border text-foreground font-mono text-xs"
+                />
+                <Input
+                  placeholder="Amount (USDC)"
+                  type="number"
+                  value={payAmount}
+                  onChange={(e) => setPayAmount(e.target.value)}
+                  className="w-full sm:w-32 bg-muted border-border text-foreground"
+                />
+                <Button
+                  disabled={sending || !payTo || !payAmount}
+                  onClick={async () => {
+                    setSending(true);
+                    try {
+                      const result = await sendX402Payment({
+                        to_address: payTo,
+                        amount: parseFloat(payAmount),
+                        payment_type: "manual",
+                      });
+                      toast.success(`Payment sent! TX: ${result.tx_hash.slice(0, 12)}...`);
+                      setPayTo("");
+                      setPayAmount("");
+                    } catch (err: any) {
+                      toast.error(err?.message || "Payment failed");
+                    } finally {
+                      setSending(false);
+                    }
+                  }}
+                  className="bg-primary hover:bg-primary/90 text-primary-foreground font-display text-xs tracking-wider"
+                >
+                  {sending ? <Loader2 className="w-4 h-4 animate-spin" /> : <><Send className="w-4 h-4 mr-1.5" />Send</>}
+                </Button>
+              </div>
             </CardContent>
           </Card>
         </motion.div>
