@@ -20,6 +20,7 @@ import {
   ExternalLink,
   AlertCircle,
   Rocket,
+  Split,
 } from "lucide-react";
 import { contractTemplates, type ContractTemplate } from "@/lib/contracts";
 
