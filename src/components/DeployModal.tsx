@@ -175,6 +175,55 @@ const DeployModal = ({ open, onOpenChange }: DeployModalProps) => {
                   </div>
                 </button>
               ))}
+
+              {/* Splits Contract Option */}
+              <button
+                onClick={async () => {
+                  setStatus("deploying");
+                  setError("");
+                  try {
+                    const result = await createSplitContract({
+                      recipients: address ? [{ address, percentAllocation: 100 }] : [],
+                      contract_name: "Revenue Split",
+                    });
+                    setTxHash(result.split.tx_hash);
+                    setContractAddress(result.split.contract_address);
+                    saveDeployedContract({
+                      name: result.contract_name,
+                      category: "Payments",
+                      address: result.split.contract_address,
+                      txHash: result.split.tx_hash,
+                      deployedAt: new Date().toISOString(),
+                      chainId: result.split.chain_id,
+                      deployer: result.split.platform_wallet,
+                    });
+                    setStatus("success");
+                  } catch (err: any) {
+                    setError(err?.message || "Split creation failed");
+                    setStatus("error");
+                  }
+                }}
+                className="w-full text-left p-4 rounded-lg border border-accent/30 bg-accent/5 hover:border-accent/60 hover:bg-accent/10 transition-all duration-200"
+              >
+                <div className="flex items-start gap-3">
+                  <div className="p-2 rounded-md bg-accent/10 text-accent mt-0.5">
+                    <Split className="w-5 h-5" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2 mb-1">
+                      <span className="font-display text-sm font-semibold text-foreground">
+                        Revenue Split (0xSplits)
+                      </span>
+                      <span className="text-[10px] px-2 py-0.5 rounded-full bg-accent/20 text-accent font-display tracking-wider">
+                        Immutable
+                      </span>
+                    </div>
+                    <p className="text-xs text-muted-foreground leading-relaxed">
+                      Create an immutable split contract. 0.05% platform fee auto-swaps to ETH on Base for Agent Economy Growth.
+                    </p>
+                  </div>
+                </div>
+              </button>
             </motion.div>
           )}
 
