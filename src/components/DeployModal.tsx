@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAccount, usePublicClient, useWalletClient } from "wagmi";
+import { deployContractViaWallet } from "@/lib/edgeFunctions";
 import { saveDeployedContract } from "@/lib/deployedContracts";
 import {
   Dialog,
