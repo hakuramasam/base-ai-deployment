@@ -20,6 +20,9 @@ const Payments = () => {
   const navigate = useNavigate();
   const [payments, setPayments] = useState<PaymentTransaction[]>([]);
   const [loading, setLoading] = useState(true);
+  const [payTo, setPayTo] = useState("");
+  const [payAmount, setPayAmount] = useState("");
+  const [sending, setSending] = useState(false);
 
   useRealtimeSubscription<PaymentTransaction>({
     table: "payment_transactions",
