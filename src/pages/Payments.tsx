@@ -3,12 +3,15 @@ import { useRealtimeSubscription } from "@/hooks/useRealtimeSubscription";
 import { useAccount } from "wagmi";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { ArrowLeft, CreditCard, TrendingUp, ArrowUpRight, ArrowDownLeft } from "lucide-react";
+import { ArrowLeft, CreditCard, TrendingUp, ArrowUpRight, ArrowDownLeft, Send, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
 import WalletButton from "@/components/WalletButton";
 import { fetchPayments, type PaymentTransaction } from "@/lib/supabaseAgents";
+import { sendX402Payment } from "@/lib/edgeFunctions";
+import { toast } from "sonner";
 
 const chainNames: Record<number, string> = { 8453: "Base", 56: "BNB Chain" };
 
