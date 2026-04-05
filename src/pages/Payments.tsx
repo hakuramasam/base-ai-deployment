@@ -86,6 +86,53 @@ const Payments = () => {
           </Card>
         </motion.div>
 
+        {/* Send Payment Card */}
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }}>
+          <Card className="bg-card border-border">
+            <CardHeader><CardTitle className="font-display text-sm tracking-wider">Send x402 Payment</CardTitle></CardHeader>
+            <CardContent>
+              <div className="flex flex-col sm:flex-row gap-3">
+                <Input
+                  placeholder="Recipient address (0x...)"
+                  value={payTo}
+                  onChange={(e) => setPayTo(e.target.value)}
+                  className="flex-1 bg-muted border-border text-foreground font-mono text-xs"
+                />
+                <Input
+                  placeholder="Amount (USDC)"
+                  type="number"
+                  value={payAmount}
+                  onChange={(e) => setPayAmount(e.target.value)}
+                  className="w-full sm:w-32 bg-muted border-border text-foreground"
+                />
+                <Button
+                  disabled={sending || !payTo || !payAmount}
+                  onClick={async () => {
+                    setSending(true);
+                    try {
+                      const result = await sendX402Payment({
+                        to_address: payTo,
+                        amount: parseFloat(payAmount),
+                        payment_type: "manual",
+                      });
+                      toast.success(`Payment sent! TX: ${result.tx_hash.slice(0, 12)}...`);
+                      setPayTo("");
+                      setPayAmount("");
+                    } catch (err: any) {
+                      toast.error(err?.message || "Payment failed");
+                    } finally {
+                      setSending(false);
+                    }
+                  }}
+                  className="bg-primary hover:bg-primary/90 text-primary-foreground font-display text-xs tracking-wider"
+                >
+                  {sending ? <Loader2 className="w-4 h-4 animate-spin" /> : <><Send className="w-4 h-4 mr-1.5" />Send</>}
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        </motion.div>
+
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
           <Card className="bg-card border-border">
             <CardHeader><CardTitle className="font-display text-sm tracking-wider">Payment History</CardTitle></CardHeader>

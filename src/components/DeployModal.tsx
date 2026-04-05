@@ -207,21 +207,64 @@ const DeployModal = ({ open, onOpenChange }: DeployModalProps) => {
                   />
                 </div>
               ))}
-              <div className="flex gap-3 pt-2">
+              <div className="flex flex-col gap-2 pt-2">
+                <div className="flex gap-3">
+                  <Button
+                    variant="outline"
+                    onClick={resetState}
+                    className="flex-1 border-border text-foreground hover:bg-secondary"
+                  >
+                    Back
+                  </Button>
+                  <Button
+                    onClick={handleDeploy}
+                    disabled={!allArgsFilled}
+                    className="flex-1 bg-primary hover:bg-primary/90 text-primary-foreground font-display text-sm tracking-wider glow-box"
+                  >
+                    <Rocket className="w-4 h-4 mr-2" />
+                    Deploy (Wallet)
+                  </Button>
+                </div>
                 <Button
-                  variant="outline"
-                  onClick={resetState}
-                  className="flex-1 border-border text-foreground hover:bg-secondary"
-                >
-                  Back
-                </Button>
-                <Button
-                  onClick={handleDeploy}
+                  onClick={async () => {
+                    if (!selected) return;
+                    setStatus("deploying");
+                    setError("");
+                    try {
+                      const constructorArgs = selected.constructorArgs?.map((arg) => {
+                        const val = args[arg.name] || arg.placeholder;
+                        if (arg.type === "uint256") return val;
+                        return val;
+                      }) || [];
+                      const result = await deployContractViaWallet({
+                        contract_name: selected.name,
+                        bytecode: selected.bytecode,
+                        constructor_args: constructorArgs,
+                        category: selected.category,
+                      });
+                      setTxHash(result.tx_hash);
+                      setContractAddress(result.contract_address);
+                      saveDeployedContract({
+                        name: selected.name,
+                        category: selected.category,
+                        address: result.contract_address,
+                        txHash: result.tx_hash,
+                        deployedAt: new Date().toISOString(),
+                        chainId: result.chain_id,
+                        deployer: result.deployer,
+                      });
+                      setStatus("success");
+                    } catch (err: any) {
+                      setError(err?.message || "Server-side deployment failed");
+                      setStatus("error");
+                    }
+                  }}
                   disabled={!allArgsFilled}
-                  className="flex-1 bg-primary hover:bg-primary/90 text-primary-foreground font-display text-sm tracking-wider glow-box"
+                  variant="outline"
+                  className="w-full border-accent/30 text-accent hover:bg-accent/10 font-display text-sm tracking-wider"
                 >
                   <Rocket className="w-4 h-4 mr-2" />
-                  Deploy
+                  Deploy via Platform Wallet (No Gas)
                 </Button>
               </div>
             </motion.div>
