@@ -48,3 +48,41 @@ export async function deployContractViaWallet(params: {
     chain_id: number;
   };
 }
+
+/**
+ * Create an immutable split contract with 0.05% platform fee.
+ * All received tokens auto-swap to ETH on Base.
+ */
+export async function createSplitContract(params: {
+  recipients: { address: string; percentAllocation: number }[];
+  distributor_fee?: number;
+  chain_id?: number;
+  contract_name?: string;
+}) {
+  const { data, error } = await supabase.functions.invoke("create-split", {
+    body: params,
+  });
+  if (error) throw error;
+  return data as {
+    success: boolean;
+    split: {
+      contract_address: string;
+      controller: string;
+      immutable: boolean;
+      platform_fee_bps: number;
+      platform_wallet: string;
+      recipients: { address: string; percentAllocation: number; role: string }[];
+      auto_swap: {
+        enabled: boolean;
+        target_token: string;
+        target_chain: string;
+        recipient: string;
+        purpose: string;
+      };
+      chain_id: number;
+      tx_hash: string;
+    };
+    contract_name: string;
+    message: string;
+  };
+}

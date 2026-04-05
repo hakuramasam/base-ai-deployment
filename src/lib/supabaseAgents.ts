@@ -136,3 +136,54 @@ export const recordPayment = async (payment: Omit<PaymentTransaction, "id" | "cr
   if (error) throw error;
   return data as PaymentTransaction;
 };
+
+/**
+ * Complete a task and automatically trigger x402 payment to the executor agent.
+ */
+export const completeTask = async (
+  taskId: string,
+  result: string,
+  executorAgentId: string
+): Promise<{ task: TaskDelegation; payment: any }> => {
+  // 1. Update task status
+  const { data: task, error: taskError } = await supabase
+    .from("task_delegations")
+    .update({
+      status: "completed",
+      result,
+      executor_agent_id: executorAgentId,
+      completed_at: new Date().toISOString(),
+    })
+    .eq("id", taskId)
+    .select()
+    .single();
+  if (taskError) throw taskError;
+
+  const typedTask = task as TaskDelegation;
+
+  // 2. Look up executor agent's wallet address for payment
+  const { data: executor, error: agentError } = await supabase
+    .from("agents")
+    .select("wallet_address")
+    .eq("id", executorAgentId)
+    .single();
+  if (agentError) throw agentError;
+
+  // 3. Auto-trigger x402 payment
+  const { sendX402Payment } = await import("@/lib/edgeFunctions");
+  const paymentResult = await sendX402Payment({
+    to_address: (executor as any).wallet_address,
+    amount: typedTask.payment_amount,
+    payment_type: "task_completion",
+    chain_id: typedTask.chain_id,
+    task_id: taskId,
+  });
+
+  // 4. Update task with payment tx hash
+  await supabase
+    .from("task_delegations")
+    .update({ payment_tx_hash: paymentResult.tx_hash })
+    .eq("id", taskId);
+
+  return { task: typedTask, payment: paymentResult };
+};
