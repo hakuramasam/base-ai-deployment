@@ -86,3 +86,37 @@ export async function createSplitContract(params: {
     message: string;
   };
 }
+
+/**
+ * Auto-swap received tokens to ETH on Base via Uniswap V3.
+ */
+export async function autoSwapToEth(params: {
+  token_address: string;
+  amount: string;
+  recipient?: string;
+  slippage_bps?: number;
+  chain_id?: number;
+  split_contract_address?: string;
+}) {
+  const { data, error } = await supabase.functions.invoke("auto-swap-eth", {
+    body: params,
+  });
+  if (error) throw error;
+  return data as {
+    success: boolean;
+    swap: {
+      token_in: string;
+      token_out: string;
+      amount_in: string;
+      fee_tier: number;
+      recipient: string;
+      router: string;
+      approve_tx_hash: string;
+      swap_tx_hash: string;
+      chain_id: number;
+      slippage_bps: number;
+      deadline: number;
+    };
+    message: string;
+  };
+}

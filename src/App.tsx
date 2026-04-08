@@ -12,6 +12,7 @@ import AgentMarketplace from "./pages/AgentMarketplace.tsx";
 import A2ACommunication from "./pages/A2ACommunication.tsx";
 import Payments from "./pages/Payments.tsx";
 import RiskSafety from "./pages/RiskSafety.tsx";
+import SplitsDashboard from "./pages/SplitsDashboard.tsx";
 import NotFound from "./pages/NotFound.tsx";
 import "@rainbow-me/rainbowkit/styles.css";
 
@@ -32,6 +33,7 @@ const App = () => (
               <Route path="/a2a" element={<A2ACommunication />} />
               <Route path="/payments" element={<Payments />} />
               <Route path="/risk" element={<RiskSafety />} />
+              <Route path="/splits" element={<SplitsDashboard />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </BrowserRouter>
