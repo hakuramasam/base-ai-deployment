@@ -120,3 +120,44 @@ export async function autoSwapToEth(params: {
     message: string;
   };
 }
+
+/**
+ * Trigger the split webhook listener to check for pending distributions
+ * and auto-swap tokens to ETH.
+ */
+export async function pollSplitWebhook() {
+  const { data, error } = await supabase.functions.invoke("split-webhook", {
+    method: "GET",
+  } as any);
+  if (error) throw error;
+  return data as {
+    success: boolean;
+    mode: string;
+    registered_splits: number;
+    processed: number;
+    results: Array<{
+      contract: string;
+      distribution_id: string;
+      swap_success: boolean;
+      swap_tx?: string;
+    }>;
+  };
+}
+
+/**
+ * Send a webhook event for a split contract distribution.
+ */
+export async function notifySplitDistribution(params: {
+  event_type: string;
+  contract_address: string;
+  token_address: string;
+  amount: string;
+  chain_id?: number;
+  tx_hash?: string;
+}) {
+  const { data, error } = await supabase.functions.invoke("split-webhook", {
+    body: params,
+  });
+  if (error) throw error;
+  return data;
+}
