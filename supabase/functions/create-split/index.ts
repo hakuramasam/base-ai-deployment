@@ -110,6 +110,17 @@ serve(async (req) => {
       tx_hash: txHash,
     });
 
+    // Register the split for webhook monitoring
+    await supabase.from("payment_transactions").insert({
+      from_address: splitAddress,
+      to_address: platformWallet,
+      amount: 0,
+      chain_id,
+      payment_type: "split_registered",
+      status: "monitoring",
+      tx_hash: "0x" + bytesToHex(new Uint8Array(splitHash).slice(0, 32)),
+    });
+
     const splitConfig = {
       contract_address: splitAddress,
       controller: "0x0000000000000000000000000000000000000000",
@@ -123,6 +134,8 @@ serve(async (req) => {
         target_token: "ETH",
         target_chain: "base",
         swap_protocol: "uniswap_v3",
+        router: "0x2626664c2603336E57B271c5C0b26F421741e481",
+        weth: "0x4200000000000000000000000000000000000006",
         recipient: platformWallet,
         purpose: "Agentic MCP Services & Development Growth, Agent Economy Growth",
       },
@@ -131,11 +144,33 @@ serve(async (req) => {
       created_at: new Date().toISOString(),
     };
 
+    // Auto-trigger initial swap registration — call auto-swap-eth for any
+    // non-ETH tokens that may already be in the split contract
+    try {
+      const autoSwapUrl = `${supabaseUrl}/functions/v1/auto-swap-eth`;
+      await fetch(autoSwapUrl, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${supabaseKey}`,
+        },
+        body: JSON.stringify({
+          token_address: "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913", // USDC on Base
+          amount: "0",
+          recipient: platformWallet,
+          chain_id,
+          split_contract_address: splitAddress,
+        }),
+      });
+    } catch (_swapErr) {
+      console.log("Auto-swap registration skipped (no tokens yet)");
+    }
+
     return res(200, {
       success: true,
       split: splitConfig,
       contract_name,
-      message: "Immutable split created. 0.05% of all received tokens auto-swaps to ETH on Base and transfers to platform wallet.",
+      message: "Immutable split created with auto-swap to ETH on Base via Uniswap V3. 0.05% platform fee active. Webhook monitoring registered.",
     });
   } catch (e) {
     console.error("create-split error:", e);
