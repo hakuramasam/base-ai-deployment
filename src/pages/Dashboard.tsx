@@ -87,6 +87,9 @@ const Dashboard = () => {
           <Button variant="ghost" size="sm" className="font-display text-xs tracking-wider" onClick={() => navigate("/risk")}>
             <Shield className="w-4 h-4 mr-1.5" />Risk & Safety
           </Button>
+          <Button variant="ghost" size="sm" className="font-display text-xs tracking-wider" onClick={() => navigate("/splits")}>
+            <TrendingUp className="w-4 h-4 mr-1.5" />Revenue Splits
+          </Button>
         </div>
       </header>
 
